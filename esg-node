@@ -468,6 +468,15 @@ printf "
 }
 
 #####
+# Higher order function that is built to trap INT and TERM signals and call associated 'cleanup' function
+#####
+setup() {
+    local func=${1:?"Need to have a function to wrap"}
+    shift
+    trap cleanup_${func} INT TERM && setup_${func} $@
+}
+
+#####
 # Openssl (support library - needed to support Curl and Globus tools, etc...)
 #####
 setup_openssl() {
@@ -556,6 +565,10 @@ setup_openssl() {
     write_openssl_env
     write_openssl_install_log
     checked_done 0
+}
+cleanup_openssl() {
+    echo "Cleaning up openssl ..."
+    exit 1
 }
 
 write_openssl_env() {
@@ -682,6 +695,10 @@ setup_curl() {
     write_curl_install_log
     checked_done 0
 }
+cleanup_curl() {
+    echo "Cleaning up curl ..."
+    exit 1
+}
 
 write_curl_env() {
     ((show_summary_latch++))
@@ -787,6 +804,10 @@ setup_git() {
     write_git_env
     write_git_install_log
     checked_done 0
+}
+cleanup_git() {
+    echo "Cleaning up git ..."
+    exit 1
 }
 
 write_git_env() {
@@ -904,6 +925,10 @@ setup_java() {
 
     checked_done 0
 }
+cleanup_java() {
+    echo "Cleaning up java ..."
+    exit 1
+}
 
 write_java_env() {
     ((show_summary_latch++))
@@ -1005,6 +1030,10 @@ setup_ant() {
     write_ant_install_log
     checked_done 0
 
+}
+cleanup_ant() {
+    echo "Cleaning up ant ..."
+    exit 1
 }
 
 write_ant_env() {
@@ -1272,6 +1301,10 @@ setup_postgress() {
     write_postgress_install_log
     checked_done 0
 }
+cleanup_postgress() {
+    echo "Cleaning up postgress ..."
+    exit 1
+}
 
 write_postgress_env() {
     ((show_summary_latch++))
@@ -1424,6 +1457,10 @@ setup_cmake() {
     write_cmake_install_log
     checked_done 0
 }
+cleanup_cmake() {
+    echo "Cleaning up cmake ..."
+    exit 1
+}
 
 write_cmake_env() {
     ((show_summary_latch++))
@@ -1542,6 +1579,10 @@ setup_cdat() {
     write_cdat_env
     write_cdat_install_log
     checked_done 0
+}
+cleanup_cdat() {
+    echo "Cleaning up cdat ..."
+    exit 1
 }
 
 write_cdat_env() {
@@ -1776,6 +1817,10 @@ setup_esgcet() {
     write_esgcet_env
     write_esgcet_install_log
     checked_done 0
+}
+cleanup_esgcet() {
+    echo "Cleaning up esgcet ..."
+    exit 1
 }
 
 write_esgcet_env() {
@@ -2051,6 +2096,10 @@ setup_tomcat() {
     write_tomcat_env
     write_tomcat_install_log
     return 0
+}
+cleanup_tomcat() {
+    echo "Cleaning up tomcat ..."
+    exit 1
 }
 
 #If there is no logrotate file ${tomcat_logrotate_file} then create one
@@ -2981,6 +3030,10 @@ setup_tds() {
     write_tds_install_log
     checked_done 0
 }
+cleanup_tds() {
+    echo "Cleaning up tds ..."
+    exit 1
+}
 
 write_tds_env() {
     ((show_summary_latch++))
@@ -3338,8 +3391,8 @@ setup_subsystem() {
     #source subsystem file and go!
     shift && debug_print "-->>> "
     [ -n "${server_dir}" ] && shift && debug_print "-->>> "
-    debug_print "source ${scripts_dir}/${fetch_file} && setup_${subsystem//'-'/_} ${upgrade_mode} $@"
-    (source ${scripts_dir}/${fetch_file} && verbose_print ":-) " && setup_${subsystem//'-'/_} ${upgrade_mode} $@ )
+    debug_print "source ${scripts_dir}/${fetch_file} && setup ${subsystem//'-'/_} ${upgrade_mode} $@"
+    (source ${scripts_dir}/${fetch_file} && verbose_print ":-) " && setup ${subsystem//'-'/_} ${upgrade_mode} $@ )
     checked_done $?
     echo "-------------------------------"
     echo
