@@ -7132,21 +7132,21 @@ main() {
     #Installation of basic system components.
     # (Only when one setup in the sequence is okay can we move to the next)
     #---------------------------------------
-        [ $((sel & INSTALL_BIT)) != 0 ] && setup_openssl
-        [ $((sel & INSTALL_BIT)) != 0 ] && setup_curl
-        [ $((sel & INSTALL_BIT)) != 0 ] && setup_git
-        [ $((sel & INSTALL_BIT)) != 0 ] && setup_java
-        [ $((sel & INSTALL_BIT)) != 0 ] && setup_ant
-        [ $((sel & INSTALL_BIT)) != 0 ] && setup_postgress
+        [ $((sel & INSTALL_BIT)) != 0 ] && setup openssl
+        [ $((sel & INSTALL_BIT)) != 0 ] && setup curl
+        [ $((sel & INSTALL_BIT)) != 0 ] && setup git
+        [ $((sel & INSTALL_BIT)) != 0 ] && setup java
+        [ $((sel & INSTALL_BIT)) != 0 ] && setup ant
+        [ $((sel & INSTALL_BIT)) != 0 ] && setup postgress
         [ $((sel & TEST_BIT))    != 0 ] && test_postgress
-        [ $((sel & INSTALL_BIT)) != 0 ] && setup_cmake
-        [ $((sel & INSTALL_BIT)) != 0 ] && setup_cdat
+        [ $((sel & INSTALL_BIT)) != 0 ] && setup cmake
+        [ $((sel & INSTALL_BIT)) != 0 ] && setup cdat
         [ $((sel & TEST_BIT))    != 0 ] && test_cdat
-        [ $((sel & INSTALL_BIT)) != 0 ] && [ $((sel & DATA_BIT+COMPUTE_BIT)) != 0 ] && setup_esgcet ${upgrade_mode}
+        [ $((sel & INSTALL_BIT)) != 0 ] && [ $((sel & DATA_BIT+COMPUTE_BIT)) != 0 ] && setup esgcet ${upgrade_mode}
         [ $((sel & TEST_BIT))    != 0 ] && [ $((sel & DATA_BIT+COMPUTE_BIT)) != 0 ] && test_esgcet
-        [ $((sel & INSTALL_BIT)) != 0 ] && setup_tomcat ${upgrade_mode}
+        [ $((sel & INSTALL_BIT)) != 0 ] && setup tomcat ${upgrade_mode}
         [ $((sel & TEST_BIT))    != 0 ] && test_tomcat
-        [ $((sel & INSTALL_BIT)) != 0 ] && [ $((sel & DATA_BIT+COMPUTE_BIT)) != 0 ] && setup_tds ${upgrade_mode}
+        [ $((sel & INSTALL_BIT)) != 0 ] && [ $((sel & DATA_BIT+COMPUTE_BIT)) != 0 ] && setup tds ${upgrade_mode}
         [ $((sel & TEST_BIT))    != 0 ] && [ $((sel & DATA_BIT+COMPUTE_BIT)) != 0 ] && test_tds
         [ $((sel & INSTALL_BIT)) != 0 ] && setup_subsystem node-manager esgf-node-manager #(tomcat off)
         [ $((sel & INSTALL_BIT)) != 0 ] && setup_subsystem dashboard esgf-dashboard #(tomcat off)
