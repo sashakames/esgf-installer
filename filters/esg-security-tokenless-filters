@@ -69,13 +69,7 @@
 #              stop_tomcat(), start_tomcat(), $workdir,
 
 service_name=${service_name:-"thredds"}
-esg_dist_url=${esg_dist_url:-"http://198.128.245.140/dist"}
 esg_root_dir=${esg_root_dir:-${ESGF_HOME:-"/esg"}}
-
-#maybe I am paranoid but I want to make sure someone can't just set
-#the environment to any place and have us just accept it and pull from
-#it -gavin
-if $(echo "${esg_dist_url}" | grep "http://198.128.245.140/dist" >& /dev/null); then echo "*"; else (echo "illegal distribution url: ${esg_dist_url}" && checked_done 1); fi
 
 esg_security_filters_dist_url=${esg_dist_url}/filters
 
@@ -196,12 +190,12 @@ get_orp_libs() {
     xsgroup_role_version=${xsgroup_role_version:-"1.0.0"}
 
     #(formerly known as endorsed jars)
-    commons_collections_version=${commons_collections_version:-"3.2.1"}
+    commons_collections_version=${commons_collections_version:-"3.2.2"}
     serializer_version=${serializer_version:-"2.9.1"}
     velocity_version=${velocity_version:-"1.5"}
-    xalan_version=${xalan_version:-"2.7.1"}
-    xercesImpl_version=${xercesImpl_version:-"2.9.1"}
-    xml_apis_version=${xml_apis_version:-"1.3.04"}
+    xalan_version=${xalan_version:-"2.7.2"}
+    xercesImpl_version=${xercesImpl_version:-"2.10.0"}
+    xml_apis_version=${xml_apis_version:-"1.4.01"}
     xmlsec_version=${xmlsec_version:-"1.4.2"}
     joda_version=${joda_version:-"2.0"}
     commons_io_version=${commons_io_version:-"2.4"}
@@ -210,7 +204,7 @@ get_orp_libs() {
     #------------------------------------------------------------------
     #NOTE: Make sure that this version matches the version that is in
     #the esg-orp project!!!
-    spring_version=${spring_version:-"3.2.2.RELEASE"}
+    spring_version=${spring_version:-"4.2.3.RELEASE"}
     #------------------------------------------------------------------
 
     #----------------------------
@@ -273,7 +267,8 @@ get_orp_libs() {
 
         echo "getting (downloading) library jars from ESGF Distribution Server (ORP/Security) to ${dest_dir} ..."
         local make_backup_file=0 #Do NOT make backup file
-
+		
+		if [ "$service_name" = "las" ]; then
         #Trying to avoid going on the wire to fetch files... see if the ORP has it locally first.
         if [[ ! -e "${dest_dir}/${spring_jar}" ]]; then
             if [[ -e "${src_dir}/${spring_jar}" ]]; then
@@ -304,6 +299,8 @@ get_orp_libs() {
         else
             ((DEBUG)) && echo "${dest_dir}/${spring_web_jar} - [OK]"
         fi
+
+		fi #end of las-only block for the spring jars. 
 
         if [[ ! -e "${dest_dir}/${esgf_security_jar}" ]]; then
             if [[ -e "${src_dir}/${esgf_security_jar}" ]]; then
